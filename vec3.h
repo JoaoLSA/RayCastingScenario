@@ -165,5 +165,14 @@ inline vec3 refract(const vec3& uv, const vec3& n, double etai_over_etat) {
     return r_out_perp + r_out_parallel;
 }
 
+inline vec3 normalize(const vec3& v) {
+    return v / v.length();
+}
+
+inline double dot_xy(const vec3& u, const vec3& v) {
+    return u.e[0] * v.e[0]
+        + u.e[1] * v.e[1];
+}
+
 
 #endif

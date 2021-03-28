@@ -10,8 +10,8 @@ class cylinder : public hittable {
 public:
     cylinder() {}
 
-    cylinder(point3 position, double r, double h, shared_ptr<material> m)
-        : position(position), radius(r), height(h), mat_ptr(m) {};
+    cylinder(point3 position, double r, double h)
+        : position(position), radius(r), height(h) {};
 
     virtual bool hit(
         const ray& r, double t_min, double t_max, hit_record& rec) const override;
@@ -20,7 +20,6 @@ public:
     point3 position;
     double radius;
     double height;
-    shared_ptr<material> mat_ptr;
 };
 
 bool cylinder::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
@@ -52,7 +51,6 @@ bool cylinder::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
 			outward_normal = vec3(cos(theta), sin(theta), 0);
 		}
 		rec.set_face_normal(r, outward_normal);
-		rec.mat_ptr = mat_ptr;
 
 		return true;
 	}
@@ -98,10 +96,6 @@ bool cylinder::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
 		outward_normal = vec3(cos(theta), sin(theta), 0);
 	}
 	rec.set_face_normal(r, outward_normal);
-	//std::cout << "here is mat_ptr :" << mat_ptr.use_count() << std::endl;
-	rec.mat_ptr = mat_ptr;
-
-	assert(rec.mat_ptr != nullptr);
 	return true;
 }
 #endif
