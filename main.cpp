@@ -5,6 +5,7 @@
 #include "sphere.h"
 #include "camera.h"
 #include "cylinder.h"
+#include "cone.h"
 
 #include <iostream>
 
@@ -42,9 +43,10 @@ int main() {
 
     // World
     hittable_list world;
-    world.add(make_shared<sphere>(point3(2,0,-0.5), 0.5));
     world.add(make_shared<sphere>(point3(0,-100.5,-1), 100));
     world.add(make_shared<cylinder>(point3(0,0,-1), 0.5, 0.5));
+    world.add(make_shared<sphere>(point3(-2,0,-0.5), 0.5));
+    world.add(make_shared<cone>(point3(2,0,0), 0.5, 0.5));
 
     // Camera
     camera cam(point3(-2,2,1), point3(0,0,-1), vec3(0,1,0), 90, aspect_ratio);

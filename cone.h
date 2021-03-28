@@ -8,8 +8,8 @@ class cone : public hittable {
 public:
 	cone() {}
 
-	cone(point3 position, double r, double h, shared_ptr<material> m)
-        : position(position), radius(r), height(h), mat_ptr(m) {};
+	cone(point3 position, double r, double h)
+        : position(position), radius(r), height(h) {};
 
     virtual bool hit(
         const ray& r, double t_min, double t_max, hit_record& rec) const override;
@@ -18,7 +18,6 @@ public:
     point3 position;
     double radius;
     double height;
-    shared_ptr<material> mat_ptr;
 };
 
 bool cone::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
@@ -33,7 +32,6 @@ bool cone::hit(const ray& r, double t_min, double t_max, hit_record& rec) const 
 		vec3 diff = normalize(point - position);
 		vec3 outward_normal = vec3(0, 0, -diff.z());
 		rec.set_face_normal(r, outward_normal);
-		rec.mat_ptr = mat_ptr;
 		return true;
 	}
 
@@ -68,7 +66,6 @@ bool cone::hit(const ray& r, double t_min, double t_max, hit_record& rec) const 
 	vec3 diff = normalize(point - position);
 	vec3 outward_normal = vec3(-diff.x(), -diff.y(), diff.z());
 	rec.set_face_normal(r, outward_normal);
-	rec.mat_ptr = mat_ptr;
 
 }
 #endif
