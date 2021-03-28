@@ -1,6 +1,7 @@
 # RayCastingScenario
 
 ## Run
+Remember to delete image.ppm before each run
     g++ .\main.cpp -o a
     .\a >> image.ppm
 ## Visualizing image
