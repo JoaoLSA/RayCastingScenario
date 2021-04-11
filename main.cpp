@@ -59,6 +59,9 @@ int main() {
     hittable_list world;    
     auto checker = make_shared<checker_texture>(color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
     world.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(checker)));
+    auto material4 = make_shared<lambertian>(color(0.1, 1, 0.1));
+    world.add(make_shared<cone>(point3(6.3, 1, 0), 0.5, 1, material4));
+
     // Camera
     camera cam(point3(2,1,1), point3(2,1,-1), vec3(0,1,0), 120, aspect_ratio);
 

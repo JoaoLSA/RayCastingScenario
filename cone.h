@@ -11,13 +11,19 @@ public:
 	cone(point3 position, double r, double h)
         : position(position), radius(r), height(h) {};
 
+	cone(point3 cen, double r, double h, shared_ptr<material> m)
+		: position(position), radius(r), height(h), mat_ptr(m) {};
+
     virtual bool hit(
         const ray& r, double t_min, double t_max, hit_record& rec) const override;
+
+	virtual bool bounding_box(double time0, double time1, aabb& output_box) const override;
 
 public:
     point3 position;
     double radius;
     double height;
+	shared_ptr<material> mat_ptr;
 };
 
 bool cone::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
@@ -66,6 +72,14 @@ bool cone::hit(const ray& r, double t_min, double t_max, hit_record& rec) const 
 	vec3 diff = normalize(point - position);
 	vec3 outward_normal = vec3(-diff.x(), -diff.y(), diff.z());
 	rec.set_face_normal(r, outward_normal);
+    rec.mat_ptr = mat_ptr;
+
 
 }
+
+bool cone::bounding_box(double t0, double t1, aabb& box) const {
+  box = aabb(vec3(-radius,0,-radius), vec3(radius,height,radius));
+  return(true);
+}
+
 #endif
