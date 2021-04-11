@@ -45,7 +45,10 @@ int main() {
 
     // World
     hittable_list world;
-    world.add(make_shared<sphere>(point3(0,-100.5,-1), 100));
+    shared_ptr<hittable> sphere1 = make_shared<sphere>(point3(0,-100.5,-1), 100);
+    sphere1 = make_shared<rotate_y>(sphere1, 0);
+    sphere1 = make_shared<translate>(sphere1, vec3(0,0,2));
+    world.add(sphere1);
 
     // Camera
     camera cam(point3(2,1,1), point3(2,1,-1), vec3(0,1,0), 120, aspect_ratio);
