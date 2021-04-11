@@ -7,6 +7,7 @@
 #include "cylinder.h"
 #include "cone.h"
 #include "triangle.h"
+#include "material.h"
 
 
 #include <iostream>
@@ -31,12 +32,15 @@ color ray_color(const ray& r, const hittable& world, int depth) {
     // If we've exceeded the ray bounce limit, no more light is gathered.
     if (depth <= 0)
         return color(0,0,0);
-    // Calculating reflected ray origins with tolerance  
+
     if (world.hit(r, 0.001, infinity, rec)) {
-        //  use the new random direction generator: 
-        point3 target = rec.p + rec.normal + random_in_unit_sphere();
-        return 0.5 * ray_color(ray(rec.p, target - rec.p), world, depth-1);
+        ray scattered;
+        color attenuation;
+        if (rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+            return attenuation * ray_color(scattered, world, depth-1);
+        return color(0,0,0);
     }
+
     vec3 unit_direction = unit_vector(r.direction());
     auto t = 0.5*(unit_direction.y() + 1.0);
     return (1.0-t)*color(1.0, 1.0, 1.0) + t*color(0.5, 0.7, 1.0);
@@ -52,12 +56,10 @@ int main() {
     const int max_depth = 50;
 
     // World
-    hittable_list world;
-    shared_ptr<hittable> sphere1 = make_shared<sphere>(point3(0,-100.5,-1), 100);
-    sphere1 = make_shared<rotate_y>(sphere1, 0);
-    sphere1 = make_shared<translate>(sphere1, vec3(0,0,2));
-    world.add(sphere1);
+    hittable_list world;    
+    auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
 
+    world.add(make_shared<sphere>(point3( 0.0, -100.5, -1.0), 100.0, material_ground));
     // Camera
     camera cam(point3(2,1,1), point3(2,1,-1), vec3(0,1,0), 120, aspect_ratio);
 
