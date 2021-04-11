@@ -8,10 +8,23 @@
 #include "cone.h"
 #include "triangle.h"
 #include "material.h"
+#include "aarect.h"
 
 
 #include <iostream>
 
+
+hittable_list simple_light() {
+    hittable_list objects;
+
+    auto checker = make_shared<checker_texture>(color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
+    objects.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(checker)));
+
+    auto difflight = make_shared<diffuse_light>(color(4,4,4));
+    objects.add(make_shared<xy_rect>(3, 5, 1, 3, -2, difflight));
+
+    return objects;
+}
 
 double hit_sphere(const point3& center, double radius, const ray& r) {
     vec3 oc = r.origin() - center;
@@ -26,24 +39,25 @@ double hit_sphere(const point3& center, double radius, const ray& r) {
     }
 }
 
-color ray_color(const ray& r, const hittable& world, int depth) {
+color ray_color(const ray& r, const color& background, const hittable& world, int depth) {
     hit_record rec;
 
     // If we've exceeded the ray bounce limit, no more light is gathered.
     if (depth <= 0)
         return color(0,0,0);
 
-    if (world.hit(r, 0.001, infinity, rec)) {
-        ray scattered;
-        color attenuation;
-        if (rec.mat_ptr->scatter(r, rec, attenuation, scattered))
-            return attenuation * ray_color(scattered, world, depth-1);
-        return color(0,0,0);
-    }
+    // If the ray hits nothing, return the background color.
+    if (!world.hit(r, 0.001, infinity, rec))
+        return background;
 
-    vec3 unit_direction = unit_vector(r.direction());
-    auto t = 0.5*(unit_direction.y() + 1.0);
-    return (1.0-t)*color(1.0, 1.0, 1.0) + t*color(0.5, 0.7, 1.0);
+    ray scattered;
+    color attenuation;
+    color emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
+
+    if (!rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+        return emitted;
+
+    return emitted + attenuation * ray_color(scattered, background, world, depth-1);
 }
 
 int main() {
@@ -54,16 +68,20 @@ int main() {
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 100;
     const int max_depth = 50;
+    point3 lookfrom;
+    point3 lookat;
+
+    color background(0,0,0);
+
+    background = color(0,0,0);
 
     // World
     hittable_list world;    
-    auto checker = make_shared<checker_texture>(color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
-    world.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(checker)));
-    auto material4 = make_shared<lambertian>(color(0.1, 1, 0.1));
-    world.add(make_shared<cone>(point3(6.3, 1, 0), 0.5, 1, material4));
-
+    world = simple_light();
+    lookfrom = point3(26,3,6);
+    lookat = point3(0,2,0);
     // Camera
-    camera cam(point3(2,1,1), point3(2,1,-1), vec3(0,1,0), 120, aspect_ratio);
+    camera cam(lookfrom, lookat, vec3(0,1,0), 120, aspect_ratio);
 
 
     // Render
@@ -78,7 +96,7 @@ int main() {
                 auto u = (i + random_double()) / (image_width-1);
                 auto v = (j + random_double()) / (image_height-1);
                 ray r = cam.get_ray(u, v);
-                pixel_color += ray_color(r, world, max_depth);
+                pixel_color += ray_color(r, background, world, max_depth);
             }
             write_color(std::cout, pixel_color, samples_per_pixel);
         }
