@@ -20,8 +20,13 @@ hittable_list simple_light() {
     auto checker = make_shared<checker_texture>(color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
     objects.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(checker)));
 
+    //objects.add(make_shared<sphere>(point3(0,10,0), 10, make_shared<lambertian>(checker)));
+    objects.add(make_shared<cone>(point3(10,10,0), 10, 10, make_shared<lambertian>(checker)));
+
+
+
     auto difflight = make_shared<diffuse_light>(color(4,4,4));
-    objects.add(make_shared<xy_rect>(3, 5, 1, 3, -2, difflight));
+    objects.add(make_shared<sphere>(point3(0,30,0), 10, difflight));
 
     return objects;
 }
