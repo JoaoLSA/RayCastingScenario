@@ -13,13 +13,19 @@ public:
     cylinder(point3 position, double r, double h)
         : position(position), radius(r), height(h) {};
 
+	cylinder(point3 position, double r, double h, shared_ptr<material> m)
+		: position(position), radius(r), height(h), mat_ptr(m) {};
+
     virtual bool hit(
         const ray& r, double t_min, double t_max, hit_record& rec) const override;
+
+	virtual bool bounding_box(double time0, double time1, aabb &output_box) const override;
 
 public:
     point3 position;
     double radius;
     double height;
+	shared_ptr<material> mat_ptr;
 };
 
 bool cylinder::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
@@ -51,6 +57,8 @@ bool cylinder::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
 			outward_normal = vec3(cos(theta), sin(theta), 0);
 		}
 		rec.set_face_normal(r, outward_normal);
+		rec.mat_ptr = mat_ptr;
+
 
 		return true;
 	}
@@ -96,6 +104,13 @@ bool cylinder::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
 		outward_normal = vec3(cos(theta), sin(theta), 0);
 	}
 	rec.set_face_normal(r, outward_normal);
+	rec.mat_ptr = mat_ptr;
 	return true;
 }
+
+bool cylinder::bounding_box(double time0, double time1, aabb &output_box) const {
+    output_box = aabb(position - point3(radius, height/2, radius), position + point3(radius, height/2, radius));
+    return true;
+}
+
 #endif

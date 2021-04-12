@@ -75,8 +75,6 @@ bool cone::hit(const ray& r, double t_min, double t_max, hit_record& rec) const 
 	vec3 outward_normal = vec3(-diff.x(), -diff.y(), diff.z());
 	rec.set_face_normal(r, outward_normal);
     rec.mat_ptr = mat_ptr;
-	rec.u = 0.1;
-	rec.v = 0.2;
 
 }
 
