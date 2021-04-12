@@ -1,83 +1,86 @@
-#ifndef TRIANGLE_H
-#define TRIANGLE_H
-
-
-
-#include "rtweekend.h"
+#pragma once
+#ifndef TRIANGLEH
+#define TRIANGLEH
 
 #include "hittable.h"
+#define EPS 0.0000001
 
 class triangle : public hittable {
-    public:
-        triangle() {}
 
-        triangle(point3 v1,point3 v2, point3 v3)
-            : vertex1(v1), vertex2(v2), vertex3(v3) {};
+public:
+	triangle() {}
+	triangle(vec3 _v0, vec3 _v1, vec3 _v2, shared_ptr<material> m) : v0(_v0), v1(_v1), v2(_v2), mat_ptr(m) { }
+	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const;
+	virtual bool bounding_box(double t0, double t1, aabb& b) const;
 
-        virtual bool hit(
-            const ray& r, double t_min, double t_max, hit_record& rec) const override;
-
-
-    public:
-        point3 vertex1; 
-        point3 vertex2;
-        point3 vertex3;
+	vec3 v0, v1, v2;
+	shared_ptr<material> mat_ptr;
 };
 
 
 
 bool triangle::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
-    // printf("The Ray origin  is %f %f %f \n",r.origin().x() ,r.origin().y(),r.origin().z());
-    // printf("The Ray direction  is %f %f %f \n",r.direction().x() ,r.direction().y(),r.direction().z());
-    vec3 t_center = (vertex1+vertex2+vertex3)/3;
-    // printf("The Triangle center is %f %f %f \n",t_center.x() ,t_center.y(),t_center.z());
-    vec3 w = t_center - r.origin();
-    //calculate the edges vector and Calculate the plane normal
-    vec3 v2v1 = vertex2 - vertex1;
-    vec3 v3v1 = vertex3 - vertex1;
-    vec3 nomral = unit_vector (cross(v2v1,v3v1));
-    double a = dot(w,nomral);
-    double b = dot(r.direction(),nomral);
-    auto k = a/b;
-    vec3 I = r.at(k);
 
-    double t_area = cross(v2v1,v3v1).length()/2;
+	vec3 e1, e2, h, s, q;
+	double a, f, u, v;
+	e1 = v1 - v0;
+	e2 = v2 - v0;
+	h = cross(r.direction(), e2);
+	a = dot(e1, h);
+	if (a > -EPS && a < EPS) {
+		return false;
+	}
 
-    //alpha
-    auto IV3 = I - vertex3;
-    auto IV2 = I - vertex2;
-    double A_a = cross(IV2,IV3).length()/2;
-    double alpha = A_a/t_area;
+	f = 1 / a;
+	s = r.origin() - v0;
+	u = f * dot(s, h);
+	if (u < 0.0 || u > 1.0) {
+		return false;
+	}
 
-    //beta
-    auto IV1 = I - vertex1;
-    double A_b = cross(IV1,IV3).length()/2;
-    double beta = A_b/t_area;
+	q = cross(s, e1);
+	v = f * dot(r.direction(), q);
+	if (v < 0.0 || u + v > 1.0) {
+		return false;
+	}
 
-    //gamma
-    double A_c = cross(IV1,IV2).length()/2;
-    double gamma = A_c/t_area;
-    
-    double result = alpha+beta+gamma;
-    
-    double x = 0.01;
+	double t = f * dot(e2, q);
+	if (t > EPS) {
 
-    auto check = abs(result-1);
-    if( check>x)
-    {
-        // printf("barycentric fail\n");
-        return false;
-    }
-
-    if(k < t_min || t_max < k)
-    {
-        return false;
-    }
-    rec.t = k;
-    rec.p = r.at(rec.t);
-    rec.set_face_normal(r, -nomral);
-    return true;
+		rec.t = t;
+		rec.p = r.at(t);
+		rec.mat_ptr = mat_ptr;
+		rec.normal = cross(e1, e2);
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
+bool triangle::bounding_box(double t0, double t1, aabb& b) const {
+	
+	vec3 min(fmin(fmin(v0.x(), v1.x()), v2.x()),
+		fmin(fmin(v0.y(), v1.y()), v2.y()),
+		fmin(fmin(v0.z(), v1.z()), v2.z()));
+	vec3 max(fmax(fmin(v0.x(), v1.x()), v2.x()),
+		fmax(fmin(v0.y(), v1.y()), v2.y()),
+		fmax(fmin(v0.z(), v1.z()), v2.z()));
+	b = aabb(min, max);
+	if (abs(b.max().x() - b.min().x()) < 0.0001f) {
+		b.min().e[0] -= 0.0001f;
+		b.max().e[0] += 0.0001f;
+	}
+	if (abs(b.max().y() - b.min().y()) < 0.0001f) {
+		b.min().e[1] -= 0.0001f;
+		b.max().e[1] += 0.0001f;
+	}
+	if (abs(b.max().z() - b.min().z()) < 0.0001f) {
+		b.min().e[2] -= 0.0001f;
+		b.max().e[2] += 0.0001f;
+	}
+
+	return true;
+}
 
 #endif
