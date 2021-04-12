@@ -22,9 +22,9 @@ hittable_list simple_light() {
 
     //objects.add(make_shared<sphere>(point3(0,10,0), 10, make_shared<lambertian>(checker)));
     //objects.add(make_shared<cone>(point3(10,10,0), 10, 10, make_shared<lambertian>(checker)));
-
-    objects.add(make_shared<cylinder>(point3(10,0,0), 5, 10, make_shared<lambertian>(checker)));
-
+    shared_ptr<hittable> cylinder1 = make_shared<cylinder>(point3(10,0,0), 5, 10, make_shared<lambertian>(checker));
+    cylinder1 = make_shared<rotate_y>(cylinder1, 10);
+    objects.add(cylinder1);
     auto difflight = make_shared<diffuse_light>(color(4,4,4));
     objects.add(make_shared<sphere>(point3(0,30,0), 10, difflight));
 
