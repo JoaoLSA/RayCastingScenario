@@ -55,7 +55,7 @@ int main() {
 
     shared_ptr<hittable> cone1 = make_shared<cone>(point3(10,0,0), 10, 20);
     shared_ptr<hittable> cylinder1 = make_shared<cylinder>(point3(0,0,0), 10, 20);
-    //shared_ptr<hittable> triangle1 = make_shared<triangle>(point3(0,0,0), point3(10, 20, 0), point3(20, 0, 0));
+    shared_ptr<hittable> triangle1 = make_shared<triangle>(point3(-40,-20,0), point3(0, 20, 0), point3(40, -20, 0));
 
 
     world.add(sphere1);
@@ -66,8 +66,11 @@ int main() {
     world.add(sphere6);
     world.add(sphere7);
 
-    world.add(cone1);
-    world.add(cylinder1);
+
+    world.add(triangle1);
+
+    // world.add(cone1);
+    // world.add(cylinder1);
     //world.add(triangle1);
 
 
