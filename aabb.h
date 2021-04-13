@@ -1,3 +1,4 @@
+//facilitar o calculo de interseção de raios com objetos
 #ifndef AABB_H
 #define AABB_H
 //==============================================================================================
@@ -24,6 +25,7 @@ class aabb {
 
         bool hit(const ray& r, double t_min, double t_max) const {
             for (int a = 0; a < 3; a++) {
+                //evitar divisão por 0 no calculo dos intervalos
                 auto t0 = fmin((minimum[a] - r.origin()[a]) / r.direction()[a],
                                (maximum[a] - r.origin()[a]) / r.direction()[a]);
                 auto t1 = fmax((minimum[a] - r.origin()[a]) / r.direction()[a],

@@ -1,3 +1,4 @@
+// classe de material abstrato que encapsula o comportamento
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
@@ -6,6 +7,8 @@
 
 struct hit_record;
 
+//Produza um raio espalhado (ou diga que ele absorveu o raio incidente).
+//Se espalhado, diga o quanto o raio deve ser atenuado.
 class material {
     public:
         virtual bool scatter(
@@ -16,8 +19,11 @@ class material {
             return color(0,0,0);
         }
 };
+/*Para o caso lambertiano (difuso) que já temos, ele pode espalhar sempre e atenuar por sua refletância R, 
+ou pode se espalhar sem atenuação, mas absorver a fração 1 - R dos raios, ou pode ser uma mistura dessas estratégias.*/
 class lambertian : public material {
     public:
+        //fazer materiais texturizados com um ponteiro de textura
         lambertian(const color& a) : albedo(make_shared<solid_color>(a)) {}
         lambertian(shared_ptr<texture> a) : albedo(a) {}
 
@@ -38,7 +44,8 @@ class lambertian : public material {
     public:
         shared_ptr<texture> albedo;
 };
-
+//para fazer um material emissor de luz
+//apenas informa ao raio de que cor é e não realiza reflexão
 class diffuse_light : public material  {
     public:
         diffuse_light(shared_ptr<texture> a) : emit(a) {}

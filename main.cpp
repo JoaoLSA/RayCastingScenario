@@ -18,13 +18,13 @@ hittable_list simple_light() {
     hittable_list objects;
 
     auto checker = make_shared<checker_texture>(color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
-    //objects.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(checker)));
+    objects.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(checker)));
 
-    objects.add(make_shared<triangle>(point3(-10,0,0), point3(10,0,0), point3(0,90,0), make_shared<lambertian>(checker)));
-    //objects.add(make_shared<cone>(point3(10,10,0), 10, 10, make_shared<lambertian>(checker)));
-    //shared_ptr<hittable> cylinder1 = make_shared<cylinder>(point3(10,0,0), 5, 10, make_shared<lambertian>(checker));
-    //cylinder1 = make_shared<rotate_y>(cylinder1, 10);
-    //objects.add(cylinder1);
+    //objects.add(make_shared<sphere>(point3(0,10,0), 10, make_shared<lambertian>(checker)));
+    objects.add(make_shared<cone>(point3(10,10,0), 10, 10, make_shared<lambertian>(checker)));
+
+
+
     auto difflight = make_shared<diffuse_light>(color(4,4,4));
     objects.add(make_shared<sphere>(point3(0,30,0), 10, difflight));
 
@@ -52,6 +52,7 @@ color ray_color(const ray& r, const color& background, const hittable& world, in
         return color(0,0,0);
 
     // If the ray hits nothing, return the background color.
+    //Calculando origens de raios refletidos com tolerância
     if (!world.hit(r, 0.001, infinity, rec))
         return background;
 
@@ -72,7 +73,7 @@ int main() {
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 100;
-    const int max_depth = 50;
+    const int max_depth = 50; //limitar o número de raios filhos
     point3 lookfrom;
     point3 lookat;
 
@@ -84,7 +85,7 @@ int main() {
     hittable_list world;    
     world = simple_light();
     lookfrom = point3(26,3,6);
-    lookat = point3(10,10,0);
+    lookat = point3(0,2,0);
     // Camera
     camera cam(lookfrom, lookat, vec3(0,1,0), 120, aspect_ratio);
 
@@ -93,6 +94,8 @@ int main() {
 
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
+    /*adicionar a cor total a cada iteração e, em seguida, realizar uma única 
+    divisão no final (pelo número de amostras) ao escrever a cor.*/
     for (int j = image_height-1; j >= 0; --j) {
         std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
         for (int i = 0; i < image_width; ++i) {

@@ -15,7 +15,9 @@
 
 #include <iostream>
 
-
+/*Em vez de adicionar uma contribuição fracionária cada vez que acumulamos mais luz na cor, 
+basta adicionar a cor total a cada iteração e, em seguida, realizar uma única divisão no final 
+(pelo número de amostras) ao escrever a cor.*/
 void write_color(std::ostream &out, color pixel_color, int samples_per_pixel) {
     auto r = pixel_color.x();
     auto g = pixel_color.y();

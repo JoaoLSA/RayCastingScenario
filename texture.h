@@ -2,7 +2,7 @@
 #define TEXTURE_H
 
 #include "rtweekend.h"
-
+//fazer todas as cores em uma textura
 class texture {
     public:
         virtual color value(double u, double v, const point3& p) const = 0;
@@ -23,7 +23,8 @@ class solid_color : public texture {
     private:
         color color_value;
 };
-
+/* textura verificadora observando que o sinal de seno e cosseno apenas se alterna de maneira regular e, 
+se multiplicarmos as funções trigonométricas em todas as três dimensões, o sinal desse produto formará um padrão verificador 3D.*/
 class checker_texture : public texture {
     public:
         checker_texture() {}
@@ -41,7 +42,7 @@ class checker_texture : public texture {
             else
                 return even->value(u, v, p);
         }
-
+    //Esses ponteiros ímpar / par do verificador podem ser para uma textura constante ou para alguma outra textura procedural.
     public:
         shared_ptr<texture> odd;
         shared_ptr<texture> even;

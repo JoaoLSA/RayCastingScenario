@@ -16,21 +16,25 @@
 class camera {
     public:
         camera(
-            point3 lookfrom,
-            point3 lookat,
-            vec3   vup,
+            point3 lookfrom,//onde colocamos a câmera
+            point3 lookat,//para onde estamos olhando
+            vec3   vup,//viewup, especifica a rotação, inclinação lateral, da câmera
+            //campo de visão ajustável, ângulo que ver atraves da viewport
             double vfov, // vertical field-of-view in degrees
             double aspect_ratio
         ) {
             auto theta = degrees_to_radians(vfov);
-            auto h = tan(theta/2);
+            auto h = tan(theta/2); //altura proporcional a distancia
             auto viewport_height = 2.0 * h;
             auto viewport_width = aspect_ratio * viewport_height;
-
+            //base ortonormal completa
             auto w = unit_vector(lookfrom - lookat);
             auto u = unit_vector(cross(vup, w));
             auto v = cross(w, u);
+            //vup, v e w estão no mesmo plano
 
+
+            //posicionamento da camera
             origin = lookfrom;
             horizontal = viewport_width * u;
             vertical = viewport_height * v;

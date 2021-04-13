@@ -55,13 +55,15 @@ class vec3 {
         double length_squared() const {
             return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];
         }
-
+        /*Se o vetor de unidade aleatório que geramos for exatamente oposto ao vetor normal, 
+        os dois serão somados a zero, o que resultará em um vetor de direção de dispersão zero.*/
         bool near_zero() const {
             // Return true if the vector is close to zero in all dimensions.
             const auto s = 1e-8;
             return (fabs(e[0]) < s) && (fabs(e[1]) < s) && (fabs(e[2]) < s);
         }
-
+        
+        //escolher um ponto aleatório no objeto e se estiver fora rejeita e procura outro.
         inline static vec3 random() {
             return vec3(random_double(), random_double(), random_double());
         }
@@ -125,7 +127,8 @@ inline vec3 cross(const vec3 &u, const vec3 &v) {
 inline vec3 unit_vector(vec3 v) {
     return v / v.length();
 }
-
+//Gerar ponto aleatório dentro do disco da unidade
+//Para realizar o desfoque de desfoque, gere raios de cena aleatórios originados de dentro de um disco centralizado no lookfrom
 inline vec3 random_in_unit_disk() {
     while (true) {
         auto p = vec3(random_double(-1,1), random_double(-1,1), 0);
@@ -133,7 +136,7 @@ inline vec3 random_in_unit_disk() {
         return p;
     }
 }
-
+//escolher um ponto aleatório em uma esfera de raio unitário
 inline vec3 random_in_unit_sphere() {
     while (true) {
         auto p = vec3::random(-1,1);
@@ -141,11 +144,11 @@ inline vec3 random_in_unit_sphere() {
         return p;
     }
 }
-
+//escolher pontos aleatórios na esfera unitária e, em seguida, normaliza-los.
 inline vec3 random_unit_vector() {
     return unit_vector(random_in_unit_sphere());
 }
-
+//er uma direção de dispersão uniforme para todos os ângulos fora do ponto de impacto, sem dependência do ângulo normal
 inline vec3 random_in_hemisphere(const vec3& normal) {
     vec3 in_unit_sphere = random_in_unit_sphere();
     if (dot(in_unit_sphere, normal) > 0.0) // In the same hemisphere as the normal
@@ -153,16 +156,17 @@ inline vec3 random_in_hemisphere(const vec3& normal) {
     else
         return -in_unit_sphere;
 }
-
+//calcular a reflação do raio
+//como v pode não ser um vetor unitário, mas n é, precisamos de um sinal de menos
 inline vec3 reflect(const vec3& v, const vec3& n) {
     return v - 2*dot(v,n)*n;
 }
-
+//calcular a refração do raio
 inline vec3 refract(const vec3& uv, const vec3& n, double etai_over_etat) {
     auto cos_theta = fmin(dot(-uv, n), 1.0);
-    vec3 r_out_perp =  etai_over_etat * (uv + cos_theta*n);
-    vec3 r_out_parallel = -sqrt(fabs(1.0 - r_out_perp.length_squared())) * n;
-    return r_out_perp + r_out_parallel;
+    vec3 r_out_perp =  etai_over_etat * (uv + cos_theta*n); //raio perpendicular a n
+    vec3 r_out_parallel = -sqrt(fabs(1.0 - r_out_perp.length_squared())) * n; //raio paralelo a n
+    return r_out_perp + r_out_parallel;//raio refratado
 }
 
 inline vec3 normalize(const vec3& v) {

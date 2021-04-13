@@ -1,3 +1,4 @@
+// É realmente um container, mas pode responder à pergunta “este raio atingiu você?”.
 #ifndef BVH_H
 #define BVH_H
 //==============================================================================================
@@ -42,7 +43,7 @@ class bvh_node : public hittable  {
         aabb box;
 };
 
-
+// comparador genérico que retorne true se o primeiro argumento for menor que o segundo, dado um argumento de índice de eixo adicional.
 inline bool box_compare(const shared_ptr<hittable> a, const shared_ptr<hittable> b, int axis) {
     aabb box_a;
     aabb box_b;
@@ -53,7 +54,7 @@ inline bool box_compare(const shared_ptr<hittable> a, const shared_ptr<hittable>
     return box_a.min().e[axis] < box_b.min().e[axis];
 }
 
-
+//funções de comparação de caixa em cada eixo usando a função genérica
 bool box_x_compare (const shared_ptr<hittable> a, const shared_ptr<hittable> b) {
     return box_compare(a, b, 0);
 }
@@ -66,20 +67,20 @@ bool box_z_compare (const shared_ptr<hittable> a, const shared_ptr<hittable> b) 
     return box_compare(a, b, 2);
 }
 
-
+//dividindo volumes BVH para fazer a fuñção hit funcionar
 bvh_node::bvh_node(
     const std::vector<shared_ptr<hittable>>& src_objects,
     size_t start, size_t end, double time0, double time1
 ) {
     auto objects = src_objects; // Create a modifiable array of the source scene objects
-
+    //escolha aleatoriamente um eixo
     int axis = random_int(0,2);
     auto comparator = (axis == 0) ? box_x_compare
                     : (axis == 1) ? box_y_compare
                                   : box_z_compare;
 
     size_t object_span = end - start;
-
+    //classifique os primitivos
     if (object_span == 1) {
         left = right = objects[start];
     } else if (object_span == 2) {
@@ -97,7 +98,7 @@ bvh_node::bvh_node(
         left = make_shared<bvh_node>(objects, start, mid, time0, time1);
         right = make_shared<bvh_node>(objects, mid, end, time0, time1);
     }
-
+    //coloque metade em cada subarvore
     aabb box_left, box_right;
 
     if (  !left->bounding_box (time0, time1, box_left)
@@ -108,7 +109,7 @@ bvh_node::bvh_node(
     box = surrounding_box(box_left, box_right);
 }
 
-
+//verifique se a caixa do nó foi atingida e, em caso afirmativo, verifique os filhos e resolva todos os detalhes
 bool bvh_node::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
     if (!box.hit(r, t_min, t_max))
         return false;

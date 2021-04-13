@@ -6,15 +6,19 @@
 #include <memory>
 #include <vector>
 
+/*ponteiros compartilhados em nosso código, porque permite que múltiplas geometrias compartilhem
+uma instância comum (por exemplo, um monte de esferas que usam o mesmo material de mapa de textura)*/
 using std::shared_ptr;
 using std::make_shared;
 
+//classe que armazena uma lista de objetos que podem ser atingidos pelo raio
 class hittable_list : public hittable {
     public:
         hittable_list() {}
         hittable_list(shared_ptr<hittable> object) { add(object); }
 
         void clear() { objects.clear(); }
+        //adiciona um valor ao final da std::vector
         void add(shared_ptr<hittable> object) { objects.push_back(object); }
 
         virtual bool hit(
@@ -24,7 +28,7 @@ class hittable_list : public hittable {
             double time0, double time1, aabb& output_box) const override;
 
     public:
-        std::vector<shared_ptr<hittable>> objects;
+        std::vector<shared_ptr<hittable>> objects;//adiciona um valor ao final da std::vector
 };
 
 bool hittable_list::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {

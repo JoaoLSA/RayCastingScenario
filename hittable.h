@@ -22,25 +22,31 @@ class material;
 struct hit_record {
     point3 p;
     vec3 normal;
-    shared_ptr<material> mat_ptr;
+    //acessar materiais em hittable
+    shared_ptr<material> mat_ptr; //ponteiro para algum tipo alocado, com semântica de contagem de referência. Cada vez que você atribui seu valor a outro ponteiro compartilhado (geralmente com uma atribuição simples), a contagem de referência é incrementada
     double t;
+    //the U,V surface coordinates of the ray-object hit point.
     double u;
     double v;
     bool front_face;
 
+    /*fazer as normais sempre apontarem para fora da superfície, ou sempre
+    apontem contra o raio incidente*/
     inline void set_face_normal(const ray& r, const vec3& outward_normal) {
         front_face = dot(r.direction(), outward_normal) < 0;
-        normal = front_face ? outward_normal :-outward_normal;
+        normal = front_face ? outward_normal :-outward_normal;//função para resolver o cálculo
     }
 };
 
-
+//classe abstrata para tratar qualquer objeto que um raio posssa atingir
 class hittable {
     public:
+        //r só irá contar aquilo que encontrar entre t_min e t_max
         virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const = 0;
+        // Lista que pode ser acessada com caixa delimitadora
         virtual bool bounding_box(double time0, double time1, aabb& output_box) const = 0;
 };
-
+//classe para mudança de coordenadas
 class translate : public hittable {
     public:
         translate(shared_ptr<hittable> p, const vec3& displacement)
@@ -80,7 +86,7 @@ bool translate::bounding_box(double time0, double time1, aabb& output_box) const
     return true;
 }
 
-
+//classe para rotação no eixo y
 class rotate_y : public hittable {
     public:
         rotate_y(shared_ptr<hittable> p, double angle);
@@ -101,7 +107,7 @@ class rotate_y : public hittable {
         aabb bbox;
 };
 
-
+//construtor para rotação em y
 rotate_y::rotate_y(shared_ptr<hittable> p, double angle) : ptr(p) {
     auto radians = degrees_to_radians(angle);
     sin_theta = sin(radians);
@@ -134,7 +140,7 @@ rotate_y::rotate_y(shared_ptr<hittable> p, double angle) : ptr(p) {
     bbox = aabb(min, max);
 }
 
-
+//função de golpe de rotação em Y atingível
 bool rotate_y::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
     auto origin = r.origin();
     auto direction = r.direction();
