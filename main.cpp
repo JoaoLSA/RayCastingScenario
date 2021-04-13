@@ -45,29 +45,35 @@ int main() {
 
     // World
     hittable_list world;
-    shared_ptr<hittable> sphere1 = make_shared<sphere>(point3(40,50,0), 7);
-    shared_ptr<hittable> sphere2 = make_shared<sphere>(point3(40 + 14,50,0), 7);
-    shared_ptr<hittable> sphere3 = make_shared<sphere>(point3(40 + 2*14,50,0), 7);
-    shared_ptr<hittable> sphere4 = make_shared<sphere>(point3(40 - 7,50 - 7,0), 7);
-    shared_ptr<hittable> sphere5 = make_shared<sphere>(point3(40 + 7,50 - 7,0), 7);
-    shared_ptr<hittable> sphere6 = make_shared<sphere>(point3(40 + 7 + 14,50 - 7,0), 7);
-    shared_ptr<hittable> sphere7 = make_shared<sphere>(point3(40 + 7 + 14 + 14,50 - 7,0), 7);
+    // shared_ptr<hittable> sphere1 = make_shared<sphere>(point3(40,50,0), 7);
+    // shared_ptr<hittable> sphere2 = make_shared<sphere>(point3(40 + 14,50,0), 7);
+    // shared_ptr<hittable> sphere3 = make_shared<sphere>(point3(40 + 2*14,50,0), 7);
+    // shared_ptr<hittable> sphere4 = make_shared<sphere>(point3(40 - 7,50 - 7,0), 7);
+    // shared_ptr<hittable> sphere5 = make_shared<sphere>(point3(40 + 7,50 - 7,0), 7);
+    // shared_ptr<hittable> sphere6 = make_shared<sphere>(point3(40 + 7 + 14,50 - 7,0), 7);
+    // shared_ptr<hittable> sphere7 = make_shared<sphere>(point3(40 + 7 + 14 + 14,50 - 7,0), 7);
 
     shared_ptr<hittable> cone1 = make_shared<cone>(point3(10,0,0), 10, 20);
     shared_ptr<hittable> cylinder1 = make_shared<cylinder>(point3(0,0,0), 10, 20);
     shared_ptr<hittable> triangle1 = make_shared<triangle>(point3(-40,-20,0), point3(0, 20, 0), point3(40, -20, 0));
+    shared_ptr<hittable> triangle2 = make_shared<triangle>(point3(-30,-20 - 40,0), point3(-30, -20, 0), point3(30, -20 - 40, 0));
+    shared_ptr<hittable> triangle3 = make_shared<triangle>(point3(-30,-20,0), point3(30, -20, 0), point3(30, -20 - 40, 0));
 
 
-    world.add(sphere1);
-    world.add(sphere2);
-    world.add(sphere3);
-    world.add(sphere4);
-    world.add(sphere5);
-    world.add(sphere6);
-    world.add(sphere7);
+    // world.add(sphere1);
+    // world.add(sphere2);
+    // world.add(sphere3);
+    // world.add(sphere4);
+    // world.add(sphere5);
+    // world.add(sphere6);
+    // world.add(sphere7);
 
 
     world.add(triangle1);
+    world.add(triangle2);
+    world.add(triangle3);
+
+
 
     // world.add(cone1);
     // world.add(cylinder1);
