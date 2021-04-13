@@ -45,14 +45,34 @@ int main() {
 
     // World
     hittable_list world;
-    world.add(make_shared<sphere>(point3(0,-100.5,-1), 100));
-    world.add(make_shared<cylinder>(point3(0,0,-1), 0.5, 0.5));
-    world.add(make_shared<sphere>(point3(-2,0,-0.5), 0.5));
-    world.add(make_shared<cone>(point3(2,0,0), 0.5, 0.5));
-    world.add(make_shared<triangle>(point3(2,1,-1.0), point3(0,3,0), point3(-2, 1, 0)));
+    shared_ptr<hittable> sphere1 = make_shared<sphere>(point3(40,50,0), 7);
+    shared_ptr<hittable> sphere2 = make_shared<sphere>(point3(40 + 14,50,0), 7);
+    shared_ptr<hittable> sphere3 = make_shared<sphere>(point3(40 + 2*14,50,0), 7);
+    shared_ptr<hittable> sphere4 = make_shared<sphere>(point3(40 - 7,50 - 7,0), 7);
+    shared_ptr<hittable> sphere5 = make_shared<sphere>(point3(40 + 7,50 - 7,0), 7);
+    shared_ptr<hittable> sphere6 = make_shared<sphere>(point3(40 + 7 + 14,50 - 7,0), 7);
+    shared_ptr<hittable> sphere7 = make_shared<sphere>(point3(40 + 7 + 14 + 14,50 - 7,0), 7);
+
+    shared_ptr<hittable> cone1 = make_shared<cone>(point3(10,0,0), 10, 20);
+    shared_ptr<hittable> cylinder1 = make_shared<cylinder>(point3(0,0,0), 10, 20);
+    //shared_ptr<hittable> triangle1 = make_shared<triangle>(point3(0,0,0), point3(10, 20, 0), point3(20, 0, 0));
+
+
+    world.add(sphere1);
+    world.add(sphere2);
+    world.add(sphere3);
+    world.add(sphere4);
+    world.add(sphere5);
+    world.add(sphere6);
+    world.add(sphere7);
+
+    world.add(cone1);
+    world.add(cylinder1);
+    //world.add(triangle1);
+
 
     // Camera
-    camera cam(point3(2,1,1), point3(2,1,-1), vec3(0,1,0), 120, aspect_ratio);
+    camera cam(point3(0,15,60), point3(0,0,0), vec3(0,1,0), 120, aspect_ratio);
 
 
     // Render
