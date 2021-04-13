@@ -17,11 +17,15 @@
 hittable_list simple_light() {
     hittable_list objects;
 
-    auto checker = make_shared<checker_texture>(color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
-    objects.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(checker)));
+    //auto checker = make_shared<checker_texture>(color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
+    auto yellow = make_shared<solid_color>(color(1, 1, 0));
+    auto green = make_shared<solid_color>(color(0, 1, 0));
 
-    //objects.add(make_shared<sphere>(point3(0,10,0), 10, make_shared<lambertian>(checker)));
-    objects.add(make_shared<cone>(point3(10,10,0), 10, 10, make_shared<lambertian>(checker)));
+    objects.add(make_shared<sphere>(point3(0,15,0), 5, make_shared<lambertian>(green)));
+
+    auto tree1_base = make_shared<cylinder>(point3(0,10,0), 5, 10, make_shared<lambertian>(yellow));
+    objects.add(make_shared<rotate_y>(tree1_base, 20));
+    //objects.add(make_shared<cone>(point3(10,10,0), 10, 10, make_shared<lambertian>(checker)));
 
 
 
@@ -73,7 +77,7 @@ int main() {
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 100;
-    const int max_depth = 50; //limitar o número de raios filhos
+    const int max_depth = 5; //limitar o número de raios filhos
     point3 lookfrom;
     point3 lookat;
 
@@ -84,7 +88,7 @@ int main() {
     // World
     hittable_list world;    
     world = simple_light();
-    lookfrom = point3(26,3,6);
+    lookfrom = point3(0,15,20);
     lookat = point3(0,2,0);
     // Camera
     camera cam(lookfrom, lookat, vec3(0,1,0), 120, aspect_ratio);
