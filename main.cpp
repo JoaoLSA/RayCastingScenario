@@ -64,6 +64,9 @@ int main() {
     shared_ptr<hittable> car1 = make_shared<triangle>(point3(-150,-140, 30), point3(-10, -140, 30), point3(-10, -100, 30));
     shared_ptr<hittable> car2 = make_shared<triangle>(point3(-150,-140, 30), point3(-150, -100, 30), point3(-10, -100, 30));
 
+    shared_ptr<hittable> car3 = make_shared<triangle>(point3(-120,-100, 30), point3(-30, -100, 30), point3(-30, -60, 30));
+    shared_ptr<hittable> car4 = make_shared<triangle>(point3(-120,-100, 30), point3(-120, -60, 30), point3(-30, -60, 30));
+
  
 
 
@@ -84,6 +87,12 @@ int main() {
 
     world.add(car1);
     world.add(car2);
+
+    world.add(car3);
+    world.add(car4);
+
+
+
 
 
     // world.add(cone1);
