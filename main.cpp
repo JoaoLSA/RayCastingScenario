@@ -54,10 +54,18 @@ int main() {
     // shared_ptr<hittable> sphere7 = make_shared<sphere>(point3(40 + 7 + 14 + 14,50 - 7,0), 7);
 
     shared_ptr<hittable> cone1 = make_shared<cone>(point3(10,0,0), 10, 20);
-    shared_ptr<hittable> cylinder1 = make_shared<cylinder>(point3(0,0,0), 10, 20);
     shared_ptr<hittable> triangle1 = make_shared<triangle>(point3(-40,-20,0), point3(0, 20, 0), point3(40, -20, 0));
     shared_ptr<hittable> triangle2 = make_shared<triangle>(point3(-30,-20 - 40,0), point3(-30, -20, 0), point3(30, -20 - 40, 0));
     shared_ptr<hittable> triangle3 = make_shared<triangle>(point3(-30,-20,0), point3(30, -20, 0), point3(30, -20 - 40, 0));
+
+    shared_ptr<hittable> cylinder1 = make_shared<cylinder>(point3(0,0,0), 14, 30);
+    shared_ptr<hittable> cylinder2 = make_shared<cylinder>(point3(0,0,0), 14, 30);
+
+    shared_ptr<hittable> car1 = make_shared<triangle>(point3(-150,-140, 30), point3(-10, -140, 30), point3(-10, -100, 30));
+    shared_ptr<hittable> car2 = make_shared<triangle>(point3(-150,-140, 30), point3(-150, -100, 30), point3(-10, -100, 30));
+
+ 
+
 
 
     // world.add(sphere1);
@@ -74,6 +82,9 @@ int main() {
     world.add(triangle3);
 
 
+    world.add(car1);
+    world.add(car2);
+
 
     // world.add(cone1);
     // world.add(cylinder1);
@@ -81,7 +92,7 @@ int main() {
 
 
     // Camera
-    camera cam(point3(0,15,60), point3(0,0,0), vec3(0,1,0), 120, aspect_ratio);
+    camera cam(point3(0,15,250), point3(0,0,0), vec3(0,1,0), 90, aspect_ratio);
 
 
     // Render
