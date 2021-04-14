@@ -23,7 +23,7 @@ hittable_list simple_light() {
 
     auto green = make_shared<solid_color>(color(0, 1, 0));
 
-    objects.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(checker)));
+    //objects.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(checker)));
 
     auto tree1_base = make_shared<cylinder>(point3(0,10,0), 10, 40, make_shared<lambertian>(yellow));
     objects.add(make_shared<rotate_x>(tree1_base, 90));
@@ -44,12 +44,20 @@ hittable_list simple_light() {
     shared_ptr<hittable> cylinder1 = make_shared<cylinder>(point3(0,0,0), 14, 30, make_shared<lambertian>(yellow));
     shared_ptr<hittable> cylinder2 = make_shared<cylinder>(point3(0,0,0), 14, 30, make_shared<lambertian>(yellow));
 
-    shared_ptr<hittable> car1 = make_shared<triangle>(point3(-150,-140, 30), point3(-10, -140, 30), point3(-10, -100, 30), make_shared<lambertian>(yellow));
-    shared_ptr<hittable> car2 = make_shared<triangle>(point3(-150,-140, 30), point3(-150, -100, 30), point3(-10, -100, 30), make_shared<lambertian>(yellow));
+    shared_ptr<hittable> car1 = make_shared<triangle>(point3(-150,-125, 30), point3(-10, -125, 30), point3(-10, -100, 30), make_shared<lambertian>(yellow));
+    shared_ptr<hittable> car2 = make_shared<triangle>(point3(-150,-125, 30), point3(-150, -100, 30), point3(-10, -100, 30), make_shared<lambertian>(yellow));
 
-    shared_ptr<hittable> car3 = make_shared<triangle>(point3(-120,-100, 30), point3(-30, -100, 30), point3(-30, -60, 30), make_shared<lambertian>(yellow));
-    shared_ptr<hittable> car4 = make_shared<triangle>(point3(-120,-100, 30), point3(-120, -60, 30), point3(-30, -60, 30), make_shared<lambertian>(yellow));
+    shared_ptr<hittable> car3 = make_shared<triangle>(point3(-120,-100, 30), point3(-30, -100, 30), point3(-30, -75, 30), make_shared<lambertian>(yellow));
+    shared_ptr<hittable> car4 = make_shared<triangle>(point3(-120,-100, 30), point3(-120, -75, 30), point3(-30, -75, 30), make_shared<lambertian>(yellow));
 
+    shared_ptr<hittable> car3 = make_shared<triangle>(point3(-120,-100, 30), point3(-30, -100, 30), point3(-30, -75, 30), make_shared<lambertian>(yellow));
+    shared_ptr<hittable> car4 = make_shared<triangle>(point3(-120,-100, 30), point3(-120, -75, 30), point3(-30, -75, 30), make_shared<lambertian>(yellow));
+
+    shared_ptr<hittable> carWheelF = make_shared<cylinder>(point3(0,0, 0), 15, 25, make_shared<lambertian>(yellow));
+    carWheelF = make_shared<translate>(carWheelF, point3(-120,-115, 32));
+ 
+    shared_ptr<hittable> carWheelB = make_shared<cylinder>(point3(-30,-115, 32), 15, 25, make_shared<lambertian>(yellow));
+    // carWheelF = make_shared<translate>(carWheelB,);
  
 
 
@@ -68,15 +76,20 @@ hittable_list simple_light() {
     objects.add(triangle3);
 
 
-    // objects.add(car1);
-    // objects.add(car2);
+    objects.add(car1);
+    objects.add(car2);
 
-    // objects.add(car3);
-    // objects.add(car4);
+    objects.add(car3);
+    objects.add(car4);
+    objects.add(carWheelF);
+    objects.add(carWheelB);
 
 
+    // Esfera que emite luz
     auto difflight = make_shared<diffuse_light>(color(10,10,10));
-    objects.add(make_shared<sphere>(point3(0,60,100), 10, difflight));
+    auto sun = make_shared<sphere>(point3(0,0,0), 10, difflight);
+    objects.add(make_shared<translate>(sun, point3(0, 60, 400)));
+
 
     return objects;
 }
@@ -94,6 +107,20 @@ double hit_sphere(const point3& center, double radius, const ray& r) {
     }
 }
 
+
+// Simple color:
+color ray_color(const ray& r, const hittable& world) {
+    hit_record rec;
+    if (world.hit(r, 0, infinity, rec)) {
+        return 0.5 * (rec.normal + color(1,1,1));
+    }
+    vec3 unit_direction = unit_vector(r.direction());
+    auto t = 0.5*(unit_direction.y() + 1.0);
+    return (1.0-t)*color(1.0, 1.0, 1.0) + t*color(0.5, 0.7, 1.0);
+}
+
+
+// Ray casting color:
 color ray_color(const ray& r, const color& background, const hittable& world, int depth) {
     hit_record rec;
 
@@ -134,7 +161,7 @@ int main() {
     // World
     hittable_list world;    
     world = simple_light();
-    lookfrom = point3(0,0,250);
+    lookfrom = point3(0,0,400);
     lookat = point3(0,2,0);
     // Camera
     camera cam(lookfrom, lookat, vec3(0,1,0), 90, aspect_ratio);
@@ -154,7 +181,9 @@ int main() {
                 auto u = (i + random_double()) / (image_width-1);
                 auto v = (j + random_double()) / (image_height-1);
                 ray r = cam.get_ray(u, v);
-                pixel_color += ray_color(r, background, world, max_depth);
+                //pixel_color += ray_color(r, background, world, max_depth);
+                pixel_color += ray_color(r, world);
+
             }
             write_color(std::cout, pixel_color, samples_per_pixel);
         }
