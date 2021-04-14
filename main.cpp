@@ -24,7 +24,7 @@ hittable_list simple_light() {
     objects.add(make_shared<sphere>(point3(0,15,0), 5, make_shared<lambertian>(green)));
 
     auto tree1_base = make_shared<cylinder>(point3(0,10,0), 5, 10, make_shared<lambertian>(yellow));
-    objects.add(make_shared<rotate_y>(tree1_base, 20));
+    objects.add(make_shared<rotate_x>(tree1_base, 90));
     //objects.add(make_shared<cone>(point3(10,10,0), 10, 10, make_shared<lambertian>(checker)));
 
 
