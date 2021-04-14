@@ -21,13 +21,9 @@ hittable_list simple_light() {
     auto yellow = make_shared<solid_color>(color(1, 1, 0));
     auto blue = make_shared<solid_color>(color(0, 0, 0.5));
 
-    auto green = make_shared<solid_color>(color(0, 1, 0));
+    auto green = make_shared<solid_color>(color(0, 0.7, 0));
 
     //objects.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(checker)));
-
-    auto tree1_base = make_shared<cylinder>(point3(0,10,0), 10, 40, make_shared<lambertian>(yellow));
-    objects.add(make_shared<rotate_x>(tree1_base, 90));
-    objects.add(make_shared<cone>(point3(10,10,0), 10, 10, make_shared<lambertian>(checker)));
 
     shared_ptr<hittable> sphere1 = make_shared<sphere>(point3(40,50,0), 7, make_shared<lambertian>(blue));
     shared_ptr<hittable> sphere2 = make_shared<sphere>(point3(40 + 14,50,0), 7, make_shared<lambertian>(blue));
@@ -35,7 +31,7 @@ hittable_list simple_light() {
     shared_ptr<hittable> sphere4 = make_shared<sphere>(point3(40 - 7,50 - 7,0), 7, make_shared<lambertian>(blue));
     shared_ptr<hittable> sphere5 = make_shared<sphere>(point3(40 + 7,50 - 7,0), 7, make_shared<lambertian>(blue));
     shared_ptr<hittable> sphere6 = make_shared<sphere>(point3(40 + 7 + 14,50 - 7,0), 7, make_shared<lambertian>(blue));
-    shared_ptr<hittable> sphere7 = make_shared<sphere>(point3(40 + 7 + 14 + 14,50 - 7,0), 7, make_shared<lambertian>(blue));
+    shared_ptr<hittable> sphere7 = make_shared<sphere>(point3(65,50 - 7,0), 7, make_shared<lambertian>(blue));
 
     shared_ptr<hittable> triangle1 = make_shared<triangle>(point3(-40,-20,0), point3(0, 20, 0), point3(40, -20, 0), make_shared<lambertian>(yellow));
     shared_ptr<hittable> triangle2 = make_shared<triangle>(point3(-30,-20 - 40,0), point3(-30, -20, 0), point3(30, -20 - 40, 0), make_shared<lambertian>(yellow));
@@ -50,15 +46,19 @@ hittable_list simple_light() {
     shared_ptr<hittable> car3 = make_shared<triangle>(point3(-120,-100, 30), point3(-30, -100, 30), point3(-30, -75, 30), make_shared<lambertian>(yellow));
     shared_ptr<hittable> car4 = make_shared<triangle>(point3(-120,-100, 30), point3(-120, -75, 30), point3(-30, -75, 30), make_shared<lambertian>(yellow));
 
-    shared_ptr<hittable> car3 = make_shared<triangle>(point3(-120,-100, 30), point3(-30, -100, 30), point3(-30, -75, 30), make_shared<lambertian>(yellow));
-    shared_ptr<hittable> car4 = make_shared<triangle>(point3(-120,-100, 30), point3(-120, -75, 30), point3(-30, -75, 30), make_shared<lambertian>(yellow));
+    shared_ptr<hittable> carRear1 = make_shared<triangle>(point3(-120,-100, 30), point3(-30, -100, 30), point3(-30, -75, 30), make_shared<lambertian>(yellow));
+    shared_ptr<hittable> carRear2 = make_shared<triangle>(point3(-120,-100, 30), point3(-120, -75, 30), point3(-30, -75, 30), make_shared<lambertian>(yellow));
 
     shared_ptr<hittable> carWheelF = make_shared<cylinder>(point3(0,0, 0), 15, 25, make_shared<lambertian>(yellow));
-    carWheelF = make_shared<translate>(carWheelF, point3(-120,-115, 32));
+    carWheelF = make_shared<translate>(carWheelF, point3(-120,-115, 12.7));
  
-    shared_ptr<hittable> carWheelB = make_shared<cylinder>(point3(-30,-115, 32), 15, 25, make_shared<lambertian>(yellow));
-    // carWheelF = make_shared<translate>(carWheelB,);
- 
+    shared_ptr<hittable> carWheelB = make_shared<cylinder>(point3(-30,-115, 12.7), 15, 25, make_shared<lambertian>(yellow));
+
+    auto tree1_base = make_shared<cylinder>(point3(400,-115,30), 20, 60, make_shared<lambertian>(green));
+    objects.add(make_shared<rotate_x>(tree1_base, 90));
+
+    auto tree1_top = make_shared<cone>(point3(400,-115 + 30, 30), 60, 40, make_shared<lambertian>(green));
+    objects.add(make_shared<rotate_x>(tree1_top, 90));
 
 
 
@@ -88,7 +88,7 @@ hittable_list simple_light() {
     // Esfera que emite luz
     auto difflight = make_shared<diffuse_light>(color(10,10,10));
     auto sun = make_shared<sphere>(point3(0,0,0), 10, difflight);
-    objects.add(make_shared<translate>(sun, point3(0, 60, 400)));
+    objects.add(make_shared<translate>(sun, point3(0, 60, 50)));
 
 
     return objects;
@@ -150,7 +150,7 @@ int main() {
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 100;
-    const int max_depth = 20; //limitar o número de raios filhos
+    const int max_depth = 50; //limitar o número de raios filhos
     point3 lookfrom;
     point3 lookat;
 
@@ -161,7 +161,7 @@ int main() {
     // World
     hittable_list world;    
     world = simple_light();
-    lookfrom = point3(0,0,400);
+    lookfrom = point3(0,0,250);
     lookat = point3(0,2,0);
     // Camera
     camera cam(lookfrom, lookat, vec3(0,1,0), 90, aspect_ratio);
