@@ -88,10 +88,10 @@ int main() {
     // World
     hittable_list world;    
     world = simple_light();
-    lookfrom = point3(0,15,20);
+    lookfrom = point3(0,0,250);
     lookat = point3(0,2,0);
     // Camera
-    camera cam(lookfrom, lookat, vec3(0,1,0), 120, aspect_ratio);
+    camera cam(lookfrom, lookat, vec3(0,1,0), 90, aspect_ratio);
 
 
     // Render
