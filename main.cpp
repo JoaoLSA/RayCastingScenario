@@ -27,6 +27,50 @@ hittable_list simple_light() {
     objects.add(make_shared<rotate_x>(tree1_base, 90));
     //objects.add(make_shared<cone>(point3(10,10,0), 10, 10, make_shared<lambertian>(checker)));
 
+    // shared_ptr<hittable> sphere1 = make_shared<sphere>(point3(40,50,0), 7);
+    // shared_ptr<hittable> sphere2 = make_shared<sphere>(point3(40 + 14,50,0), 7);
+    // shared_ptr<hittable> sphere3 = make_shared<sphere>(point3(40 + 2*14,50,0), 7);
+    // shared_ptr<hittable> sphere4 = make_shared<sphere>(point3(40 - 7,50 - 7,0), 7);
+    // shared_ptr<hittable> sphere5 = make_shared<sphere>(point3(40 + 7,50 - 7,0), 7);
+    // shared_ptr<hittable> sphere6 = make_shared<sphere>(point3(40 + 7 + 14,50 - 7,0), 7);
+    // shared_ptr<hittable> sphere7 = make_shared<sphere>(point3(40 + 7 + 14 + 14,50 - 7,0), 7);
+
+    shared_ptr<hittable> triangle1 = make_shared<triangle>(point3(-40,-20,0), point3(0, 20, 0), point3(40, -20, 0), make_shared<lambertian>(yellow));
+    // shared_ptr<hittable> triangle2 = make_shared<triangle>(point3(-30,-20 - 40,0), point3(-30, -20, 0), point3(30, -20 - 40, 0));
+    // shared_ptr<hittable> triangle3 = make_shared<triangle>(point3(-30,-20,0), point3(30, -20, 0), point3(30, -20 - 40, 0));
+
+    // shared_ptr<hittable> cylinder1 = make_shared<cylinder>(point3(0,0,0), 14, 30);
+    // shared_ptr<hittable> cylinder2 = make_shared<cylinder>(point3(0,0,0), 14, 30);
+
+    // shared_ptr<hittable> car1 = make_shared<triangle>(point3(-150,-140, 30), point3(-10, -140, 30), point3(-10, -100, 30));
+    // shared_ptr<hittable> car2 = make_shared<triangle>(point3(-150,-140, 30), point3(-150, -100, 30), point3(-10, -100, 30));
+
+    // shared_ptr<hittable> car3 = make_shared<triangle>(point3(-120,-100, 30), point3(-30, -100, 30), point3(-30, -60, 30));
+    // shared_ptr<hittable> car4 = make_shared<triangle>(point3(-120,-100, 30), point3(-120, -60, 30), point3(-30, -60, 30));
+
+ 
+
+
+
+    // world.add(sphere1);
+    // world.add(sphere2);
+    // world.add(sphere3);
+    // world.add(sphere4);
+    // world.add(sphere5);
+    // world.add(sphere6);
+    // world.add(sphere7);
+
+
+    objects.add(triangle1);
+    objects.add(triangle2);
+    objects.add(triangle3);
+
+
+    objects.add(car1);
+    objects.add(car2);
+
+    objects.add(car3);
+    objects.add(car4);
 
 
     auto difflight = make_shared<diffuse_light>(color(4,4,4));
