@@ -17,48 +17,50 @@
 hittable_list simple_light() {
     hittable_list objects;
 
-    //auto checker = make_shared<checker_texture>(color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
+    auto checker = make_shared<checker_texture>(color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
     auto yellow = make_shared<solid_color>(color(1, 1, 0));
+    auto blue = make_shared<solid_color>(color(0, 0, 0.5));
+
     auto green = make_shared<solid_color>(color(0, 1, 0));
 
-    objects.add(make_shared<sphere>(point3(0,15,0), 5, make_shared<lambertian>(green)));
+    objects.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(checker)));
 
-    auto tree1_base = make_shared<cylinder>(point3(0,10,0), 5, 10, make_shared<lambertian>(yellow));
+    auto tree1_base = make_shared<cylinder>(point3(0,10,0), 10, 40, make_shared<lambertian>(yellow));
     objects.add(make_shared<rotate_x>(tree1_base, 90));
-    //objects.add(make_shared<cone>(point3(10,10,0), 10, 10, make_shared<lambertian>(checker)));
+    objects.add(make_shared<cone>(point3(10,10,0), 10, 10, make_shared<lambertian>(checker)));
 
-    // shared_ptr<hittable> sphere1 = make_shared<sphere>(point3(40,50,0), 7);
-    // shared_ptr<hittable> sphere2 = make_shared<sphere>(point3(40 + 14,50,0), 7);
-    // shared_ptr<hittable> sphere3 = make_shared<sphere>(point3(40 + 2*14,50,0), 7);
-    // shared_ptr<hittable> sphere4 = make_shared<sphere>(point3(40 - 7,50 - 7,0), 7);
-    // shared_ptr<hittable> sphere5 = make_shared<sphere>(point3(40 + 7,50 - 7,0), 7);
-    // shared_ptr<hittable> sphere6 = make_shared<sphere>(point3(40 + 7 + 14,50 - 7,0), 7);
-    // shared_ptr<hittable> sphere7 = make_shared<sphere>(point3(40 + 7 + 14 + 14,50 - 7,0), 7);
+    shared_ptr<hittable> sphere1 = make_shared<sphere>(point3(40,50,0), 7, make_shared<lambertian>(blue));
+    shared_ptr<hittable> sphere2 = make_shared<sphere>(point3(40 + 14,50,0), 7, make_shared<lambertian>(blue));
+    shared_ptr<hittable> sphere3 = make_shared<sphere>(point3(40 + 2*14,50,0), 7, make_shared<lambertian>(blue));
+    shared_ptr<hittable> sphere4 = make_shared<sphere>(point3(40 - 7,50 - 7,0), 7, make_shared<lambertian>(blue));
+    shared_ptr<hittable> sphere5 = make_shared<sphere>(point3(40 + 7,50 - 7,0), 7, make_shared<lambertian>(blue));
+    shared_ptr<hittable> sphere6 = make_shared<sphere>(point3(40 + 7 + 14,50 - 7,0), 7, make_shared<lambertian>(blue));
+    shared_ptr<hittable> sphere7 = make_shared<sphere>(point3(40 + 7 + 14 + 14,50 - 7,0), 7, make_shared<lambertian>(blue));
 
     shared_ptr<hittable> triangle1 = make_shared<triangle>(point3(-40,-20,0), point3(0, 20, 0), point3(40, -20, 0), make_shared<lambertian>(yellow));
-    // shared_ptr<hittable> triangle2 = make_shared<triangle>(point3(-30,-20 - 40,0), point3(-30, -20, 0), point3(30, -20 - 40, 0));
-    // shared_ptr<hittable> triangle3 = make_shared<triangle>(point3(-30,-20,0), point3(30, -20, 0), point3(30, -20 - 40, 0));
+    shared_ptr<hittable> triangle2 = make_shared<triangle>(point3(-30,-20 - 40,0), point3(-30, -20, 0), point3(30, -20 - 40, 0), make_shared<lambertian>(yellow));
+    shared_ptr<hittable> triangle3 = make_shared<triangle>(point3(-30,-20,0), point3(30, -20, 0), point3(30, -20 - 40, 0), make_shared<lambertian>(yellow));
 
-    // shared_ptr<hittable> cylinder1 = make_shared<cylinder>(point3(0,0,0), 14, 30);
-    // shared_ptr<hittable> cylinder2 = make_shared<cylinder>(point3(0,0,0), 14, 30);
+    shared_ptr<hittable> cylinder1 = make_shared<cylinder>(point3(0,0,0), 14, 30, make_shared<lambertian>(yellow));
+    shared_ptr<hittable> cylinder2 = make_shared<cylinder>(point3(0,0,0), 14, 30, make_shared<lambertian>(yellow));
 
-    // shared_ptr<hittable> car1 = make_shared<triangle>(point3(-150,-140, 30), point3(-10, -140, 30), point3(-10, -100, 30));
-    // shared_ptr<hittable> car2 = make_shared<triangle>(point3(-150,-140, 30), point3(-150, -100, 30), point3(-10, -100, 30));
+    shared_ptr<hittable> car1 = make_shared<triangle>(point3(-150,-140, 30), point3(-10, -140, 30), point3(-10, -100, 30), make_shared<lambertian>(yellow));
+    shared_ptr<hittable> car2 = make_shared<triangle>(point3(-150,-140, 30), point3(-150, -100, 30), point3(-10, -100, 30), make_shared<lambertian>(yellow));
 
-    // shared_ptr<hittable> car3 = make_shared<triangle>(point3(-120,-100, 30), point3(-30, -100, 30), point3(-30, -60, 30));
-    // shared_ptr<hittable> car4 = make_shared<triangle>(point3(-120,-100, 30), point3(-120, -60, 30), point3(-30, -60, 30));
+    shared_ptr<hittable> car3 = make_shared<triangle>(point3(-120,-100, 30), point3(-30, -100, 30), point3(-30, -60, 30), make_shared<lambertian>(yellow));
+    shared_ptr<hittable> car4 = make_shared<triangle>(point3(-120,-100, 30), point3(-120, -60, 30), point3(-30, -60, 30), make_shared<lambertian>(yellow));
 
  
 
 
 
-    // world.add(sphere1);
-    // world.add(sphere2);
-    // world.add(sphere3);
-    // world.add(sphere4);
-    // world.add(sphere5);
-    // world.add(sphere6);
-    // world.add(sphere7);
+    // objects.add(sphere1);
+    // objects.add(sphere2);
+    // objects.add(sphere3);
+    // objects.add(sphere4);
+    // objects.add(sphere5);
+    // objects.add(sphere6);
+    // objects.add(sphere7);
 
 
     objects.add(triangle1);
@@ -66,15 +68,15 @@ hittable_list simple_light() {
     objects.add(triangle3);
 
 
-    objects.add(car1);
-    objects.add(car2);
+    // objects.add(car1);
+    // objects.add(car2);
 
-    objects.add(car3);
-    objects.add(car4);
+    // objects.add(car3);
+    // objects.add(car4);
 
 
-    auto difflight = make_shared<diffuse_light>(color(4,4,4));
-    objects.add(make_shared<sphere>(point3(0,30,0), 10, difflight));
+    auto difflight = make_shared<diffuse_light>(color(10,10,10));
+    objects.add(make_shared<sphere>(point3(0,60,100), 10, difflight));
 
     return objects;
 }
@@ -121,7 +123,7 @@ int main() {
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 100;
-    const int max_depth = 5; //limitar o número de raios filhos
+    const int max_depth = 20; //limitar o número de raios filhos
     point3 lookfrom;
     point3 lookat;
 
